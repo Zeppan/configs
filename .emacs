@@ -61,6 +61,12 @@
   :init
   (powerline-default-theme))
 
+(use-package highlight-indent-guides
+  :ensure t
+  :init
+  :hook
+  (prog-mode . highlight-indent-guides-mode)
+
 (use-package whitespace
   :init
   (global-whitespace-mode)
