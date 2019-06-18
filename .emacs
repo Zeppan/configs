@@ -77,6 +77,11 @@
     (setq whitespace-line-column 80)
     (setq-default whitespace-style '(face trailing tab-mark)))
 
+(use-package google-this
+  :ensure t
+  :bind ("C-c g" . google-this)
+  :config (google-this-mode 1))
+
 ;; Built in emacs stuff
 (menu-bar-mode -1)
 (tool-bar-mode -1)
