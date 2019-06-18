@@ -23,9 +23,9 @@
   :ensure t
   :init
   :config
-   (setq fci-rule-column 80)
-   (setq fci-rule-width 1)
-   (setq fci-rule-color "red")
+  (setq fci-rule-column 80)
+  (setq fci-rule-width 1)
+  (setq fci-rule-color "red")
   :hook (c-mode . fci-mode))
 
 (use-package flycheck
@@ -65,7 +65,7 @@
   :ensure t
   :init
   :hook
-  (prog-mode . highlight-indent-guides-mode)
+  (prog-mode . highlight-indent-guides-mode))
 
 (use-package whitespace
   :init
@@ -74,8 +74,8 @@
   (prog-mode . whitespace-mode)
   (before-save . delete-trailing-whitespace)
   :config
-    (setq whitespace-line-column 80)
-    (setq-default whitespace-style '(face trailing tab-mark)))
+  (setq whitespace-line-column 80)
+  (setq-default whitespace-style '(face trailing tab-mark)))
 
 (use-package google-this
   :ensure t
@@ -90,9 +90,16 @@
 (electric-pair-mode 1)
 (column-number-mode 1)
 (show-paren-mode 1)
+
 (defun line-hook()
+  "Add line numbers."
   (linum-mode 1))
 (add-hook 'prog-mode-hook 'line-hook)
+
+(defun indent-hook()
+  "Indent before saving."
+  (indent-region (point-min) (point-max))nil)
+(add-hook 'before-save-hook 'indent-hook)
 
 (setq initial-frame-alist
       '(
