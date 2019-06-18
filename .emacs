@@ -111,8 +111,8 @@
 ;; Code style
 (defun my-c-mode-hook ()
   "Set-up for C-programming."
-  (setq c-default-style "linux")
-  (setq c-basic-offset 8))
+  (defvar c-default-style "linux")
+  (defvar c-basic-offset 8))
 (add-hook 'c-mode-hook 'my-c-mode-hook)
 
 
