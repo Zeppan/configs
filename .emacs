@@ -82,6 +82,12 @@
   :bind ("C-c g" . google-this)
   :config (google-this-mode 1))
 
+(use-package ace-jump-mode
+  :ensure t
+  :bind
+  ("C-c SPC" . ace-jump-word-mode)
+  ("C-c C-c SPC" . ace-jump-line-mode))
+
 ;; Built in emacs stuff
 (menu-bar-mode -1)
 (tool-bar-mode -1)
