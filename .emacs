@@ -107,19 +107,15 @@
   (indent-region (point-min) (point-max))nil)
 (add-hook 'before-save-hook 'indent-hook)
 
+(defun c-hook()
+  "Setup for C programming."
+  (c-set-style "linux"))
+(add-hook 'c-mode-hook 'c-hook)
+
 (setq initial-frame-alist
       '(
 	(width . 90)
 	(height . 65)
 	))
-
-
-;; Code style
-(defun my-c-mode-hook ()
-  "Set-up for C-programming."
-  (defvar c-default-style "linux")
-  (defvar c-basic-offset 8))
-(add-hook 'c-mode-hook 'my-c-mode-hook)
-
 
 ;;; .emacs ends here
