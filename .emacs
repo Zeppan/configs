@@ -31,17 +31,34 @@
 (use-package flycheck
   :ensure t
   :commands global-flycheck-mode
-  :init (global-flycheck-mode))
+  :init
+  (add-hook 'prog-mode-hook 'flycheck-mode)
+  :config
+  (add-to-list 'display-buffer-alist
+	       `(,(rx bos "*Flycheck errors*" eos)
+		 (display-buffer-reuse-window
+		  display-buffer-in-side-window)
+		 (side            . bottom)
+		 (reusable-frames . visible)
+		 (window-height   . 0.20)))
+  (use-package flycheck-pos-tip
+    :ensure t
+    :config (flycheck-pos-tip-mode))
+  (use-package flycheck-color-mode-line
+    :ensure t
+    :hook (flycheck-mode . flycheck-color-mode-line-mode)))
 
-(use-package flycheck-pos-tip
-  :ensure t
-  :after flycheck
-  :commands flycheck-pos-tip-mode
-  :init (flycheck-pos-tip-mode))
+
 
 (use-package company
   :ensure t
   :commands global-company-mode
+  :bind
+  (("C-RET" . company-manual-begin)
+   ("<C-return>" . company-manual-begin)
+   :map company-active-map
+   ("TAB" . nil)
+   ("<tab>" . nil))
   :init (progn
 	  (global-company-mode))
   :config (progn
@@ -86,7 +103,7 @@
   :ensure t
   :bind
   ("C-c SPC" . ace-jump-word-mode)
-  ("C-c C-c SPC" . ace-jump-line-mode))
+  ("C-c C-g" . ace-jump-line-mode))
 
 ;; Built in emacs stuff
 (menu-bar-mode -1)
@@ -109,7 +126,9 @@
 
 (defun c-hook()
   "Setup for C programming."
-  (c-set-style "linux"))
+  (c-set-style "linux")
+  (when (not flycheck-current-errors)
+    (flycheck-list-errors)))
 (add-hook 'c-mode-hook 'c-hook)
 
 (setq initial-frame-alist
@@ -119,3 +138,4 @@
 	))
 
 ;;; .emacs ends here
+
