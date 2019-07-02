@@ -105,6 +105,17 @@
   ("C-c SPC" . ace-jump-word-mode)
   ("C-c C-g" . ace-jump-line-mode))
 
+(use-package org
+  :ensure t
+  :hook (org-mode . turn-on-flyspell))
+
+(use-package magit
+  :ensure t
+  :bind ("C-x g" . magit-status))
+
+(use-package minimap
+  :ensure t)
+
 ;; Built in emacs stuff
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -121,7 +132,8 @@
 
 (defun indent-hook()
   "Indent before saving."
-  (indent-region (point-min) (point-max))nil)
+  (if (not (eq major-mode 'fundamental-mode))
+      (indent-region (point-min) (point-max))nil))
 (add-hook 'before-save-hook 'indent-hook)
 
 (defun c-hook()
@@ -138,4 +150,3 @@
 	))
 
 ;;; .emacs ends here
-
