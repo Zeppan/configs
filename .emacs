@@ -113,8 +113,13 @@
   :ensure t
   :bind ("C-x g" . magit-status))
 
-(use-package minimap
-  :ensure t)
+(use-package expand-region
+  :ensure t
+  :bind ("<f7>" . er/expand-region))
+
+(use-package multiple-cursors
+  :ensure t
+  :bind ("<f8>" . mc/mark-next-like-this))
 
 ;; Built in emacs stuff
 (menu-bar-mode -1)
