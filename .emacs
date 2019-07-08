@@ -71,7 +71,11 @@
 (use-package helm
   :ensure t
   :config
-  (helm-mode t))
+  (helm-mode t)
+  (use-package helm-gtags
+    :ensure t
+    :hook (c-mode . helm-gtags-mode)
+    :bind ("<f6>" . helm-gtags-find-tag)))
 
 (use-package powerline
   :ensure t
@@ -130,6 +134,8 @@
 (column-number-mode 1)
 (show-paren-mode 1)
 
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
 (defun line-hook()
   "Add line numbers."
   (linum-mode 1))
@@ -144,6 +150,7 @@
 (defun c-hook()
   "Setup for C programming."
   (c-set-style "linux")
+  (semantic-mode t)
   (when (not flycheck-current-errors)
     (flycheck-list-errors)))
 (add-hook 'c-mode-hook 'c-hook)
