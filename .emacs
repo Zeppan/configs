@@ -14,10 +14,10 @@
 
 (require 'use-package)
 
-(use-package solarized-theme
+(use-package moe-theme
   :ensure t
   :config
-  (load-theme 'solarized-dark t))
+  (load-theme 'moe-dark t))
 
 (use-package fill-column-indicator
   :ensure t
@@ -111,7 +111,12 @@
 
 (use-package org
   :ensure t
-  :hook (org-mode . turn-on-flyspell))
+  :init
+  (setq org-agenda-files (list "~/org/OrgTutorial.org"))
+  :hook (org-mode . turn-on-flyspell)
+  :bind
+  ("\C-cl" . org-store-link)
+  ("\C-ca" . org-agenda))
 
 (use-package magit
   :ensure t
@@ -124,6 +129,15 @@
 (use-package multiple-cursors
   :ensure t
   :bind ("<f8>" . mc/mark-next-like-this))
+
+(use-package groovy-mode
+  :ensure t)
+
+(use-package flymd
+  :ensure t)
+
+(use-package cmake-mode
+  :ensure t)
 
 ;; Built in emacs stuff
 (menu-bar-mode -1)
@@ -143,8 +157,7 @@
 
 (defun indent-hook()
   "Indent before saving."
-  (if (not (eq major-mode 'fundamental-mode))
-      (indent-region (point-min) (point-max))nil))
+  (indent-region (point-min) (point-max))nil)
 (add-hook 'before-save-hook 'indent-hook)
 
 (defun c-hook()
@@ -154,6 +167,7 @@
   (when (not flycheck-current-errors)
     (flycheck-list-errors)))
 (add-hook 'c-mode-hook 'c-hook)
+
 
 (setq initial-frame-alist
       '(
