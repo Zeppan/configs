@@ -152,6 +152,10 @@
 (global-set-key (kbd "C-<tab>") (lambda ()
 				  (interactive)
 				  (other-window -1)))
+(global-set-key (kbd "<backtab>") (lambda ()
+				    (interactive)
+				    (other-window 1)))
+
 
 (defun line-hook()
   "Add line numbers."
