@@ -141,6 +141,17 @@
   :ensure t
   :hook (c-mode . highlight-doxygen-mode))
 
+(use-package ivy
+  :ensure t
+  :init
+  (ivy-mode 1)
+  :bind
+  ("C-x b" . ivy-switch-buffer)
+  :config
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  (setq ivy-ignore-buffers '("\\*")))
+
 ;; Built in emacs stuff
 ;; Remove toolbar
 (menu-bar-mode -1)
@@ -158,7 +169,6 @@
 ;; Removes the start screen
 (setq inhibit-startup-screen t)
 
-(global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "<backtab>") (lambda ()
 				    (interactive)
 				    (other-window -1)))
