@@ -48,8 +48,6 @@
     :ensure t
     :hook (flycheck-mode . flycheck-color-mode-line-mode)))
 
-
-
 (use-package company
   :ensure t
   :commands global-company-mode
@@ -139,23 +137,34 @@
 (use-package cmake-mode
   :ensure t)
 
+(use-package highlight-doxygen
+  :ensure t
+  :hook (c-mode . highlight-doxygen-mode))
+
 ;; Built in emacs stuff
+;; Remove toolbar
 (menu-bar-mode -1)
 (tool-bar-mode -1)
+;; Remove the scroll bar
 (toggle-scroll-bar -1)
+;; Highlights the current line
 (global-hl-line-mode 1)
+;; Pair () [] {} etc.
 (electric-pair-mode 1)
+;; Shows the column number
 (column-number-mode 1)
+;; highligts the parenthesis pair
 (show-paren-mode 1)
+;; Removes the start screen
+(setq inhibit-startup-screen t)
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-(global-set-key (kbd "C-<tab>") (lambda ()
-				  (interactive)
-				  (other-window -1)))
 (global-set-key (kbd "<backtab>") (lambda ()
 				    (interactive)
-				    (other-window 1)))
-
+				    (other-window -1)))
+(global-set-key (kbd "C-<tab>") (lambda ()
+				  (interactive)
+				  (other-window 1)))
 
 (defun line-hook()
   "Add line numbers."
@@ -174,12 +183,5 @@
   (when (not flycheck-current-errors)
     (flycheck-list-errors)))
 (add-hook 'c-mode-hook 'c-hook)
-
-
-(setq initial-frame-alist
-      '(
-	(width . 90)
-	(height . 65)
-	))
 
 ;;; .emacs ends here
