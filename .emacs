@@ -33,6 +33,9 @@
   :commands global-flycheck-mode
   :init
   (add-hook 'prog-mode-hook 'flycheck-mode)
+  :bind
+  ("C-x C-," . flycheck-next-error)
+  ("C-x C-." . flycheck-previous-error)
   :config
   (add-to-list 'display-buffer-alist
 	       `(,(rx bos "*Flycheck errors*" eos)
