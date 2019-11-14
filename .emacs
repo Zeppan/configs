@@ -1,8 +1,9 @@
-;;; Package --- Summary
-;;
+;;; package --- Summary
+;;;
 ;;; Commentary:
-
-;;; code:
+;;; My config file, started in 2019. Emacs built in stuff is at the bottom.
+;;; The package "use-package" is used to manage all of the packages.
+;;; Code:
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 
@@ -33,9 +34,11 @@
   :commands global-flycheck-mode
   :init
   (add-hook 'prog-mode-hook 'flycheck-mode)
+  :hook
+  (flycheck-mode . flycheck-list-errors)
   :bind
-  ("C-x C-," . flycheck-next-error)
-  ("C-x C-." . flycheck-previous-error)
+  ("C-." . flycheck-next-error)
+  ("C-," . flycheck-previous-error)
   :config
   (add-to-list 'display-buffer-alist
 	       `(,(rx bos "*Flycheck errors*" eos)
@@ -49,7 +52,8 @@
     :config (flycheck-pos-tip-mode))
   (use-package flycheck-color-mode-line
     :ensure t
-    :hook (flycheck-mode . flycheck-color-mode-line-mode)))
+    :hook (flycheck-mode . flycheck-color-mode-line-mode))
+  )
 
 (use-package company
   :ensure t
@@ -67,7 +71,23 @@
 	    (setq company-idle-delay .3)    ; decrease delay
 	    (setq company-echo-delay 0)     ; remove annoying blinking
 	    (setq company-begin-commands '(self-insert-command))
-	    ))
+	    )
+  (use-package company-c-headers
+    :ensure t
+    :config
+    (add-to-list 'company-backends 'company-c-headers))
+  (use-package company-irony
+    :ensure t
+    :config
+    (eval-after-load 'company
+      '(add-to-list 'company-backends 'company-irony)))
+  )
+
+(use-package irony
+  :ensure t
+  :hook
+  (irony-mode . irony-cdb-autosetup-compile-options)
+  )
 
 (use-package helm
   :ensure t
@@ -192,9 +212,7 @@
 (defun c-hook()
   "Setup for C programming."
   (c-set-style "linux")
-  (semantic-mode t)
-  (when (not flycheck-current-errors)
-    (flycheck-list-errors)))
+  (semantic-mode t))
 (add-hook 'c-mode-hook 'c-hook)
 
 ;;; .emacs ends here
