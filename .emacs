@@ -38,7 +38,7 @@
   (flycheck-mode . flycheck-list-errors)
   :bind
   ("C-." . flycheck-next-error)
-  ("C-," . flycheck-previous-error)
+  ("C-:" . flycheck-previous-error)
   :config
   (add-to-list 'display-buffer-alist
 	       `(,(rx bos "*Flycheck errors*" eos)
@@ -53,6 +53,10 @@
   (use-package flycheck-color-mode-line
     :ensure t
     :hook (flycheck-mode . flycheck-color-mode-line-mode))
+  )
+
+(use-package rtags
+  :ensure t
   )
 
 (use-package company
@@ -173,7 +177,13 @@
   :config
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
-  (setq ivy-ignore-buffers '("\\*")))
+  (setq ivy-ignore-buffers '("\\*"))
+  )
+
+(use-package cmake-ide
+  :ensure t
+  :requires rtags
+  :config (cmake-ide-setup))
 
 ;; Built in emacs stuff
 ;; Remove toolbar
@@ -212,7 +222,8 @@
 (defun c-hook()
   "Setup for C programming."
   (c-set-style "linux")
-  (semantic-mode t))
+  (semantic-mode t)
+  (setq flycheck-clang-include-path (list "..")))
 (add-hook 'c-mode-hook 'c-hook)
 
 ;;; .emacs ends here
