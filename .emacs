@@ -80,18 +80,13 @@
     :ensure t
     :config
     (add-to-list 'company-backends 'company-c-headers))
+
   (use-package company-irony
     :ensure t
     :config
-    (eval-after-load 'company
-      '(add-to-list 'company-backends 'company-irony)))
+    (add-to-list 'company-backends 'company-irony))
   )
 
-(use-package irony
-  :ensure t
-  :hook
-  (irony-mode . irony-cdb-autosetup-compile-options)
-  )
 
 (use-package helm
   :ensure t
@@ -161,13 +156,6 @@
 (use-package flymd
   :ensure t)
 
-(use-package cmake-mode
-  :ensure t)
-
-(use-package highlight-doxygen
-  :ensure t
-  :hook (c-mode . highlight-doxygen-mode))
-
 (use-package ivy
   :ensure t
   :init
@@ -185,6 +173,7 @@
   :requires rtags
   :config (cmake-ide-setup))
 
+;; ************************************************** ;;
 ;; Built in emacs stuff
 ;; Remove toolbar
 (menu-bar-mode -1)
@@ -222,8 +211,7 @@
 (defun c-hook()
   "Setup for C programming."
   (c-set-style "linux")
-  (semantic-mode t)
-  (setq flycheck-clang-include-path (list "..")))
+  (semantic-mode t))
 (add-hook 'c-mode-hook 'c-hook)
 
 ;;; .emacs ends here
