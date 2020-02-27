@@ -173,6 +173,36 @@
   :requires rtags
   :config (cmake-ide-setup))
 
+(use-package xcscope
+  :ensure t
+  :init (cscope-setup))
+
+(use-package stickyfunc-enhance
+  :ensure t
+  :config
+  (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
+  )
+
+(use-package srefactor
+  :ensure t
+  :bind
+  ("M-RET" . srefactor-refactor-at-point)
+  )
+
+(use-package smooth-scrolling
+  :ensure t
+  :init (smooth-scrolling-mode 1))
+
+(use-package haskell-mode
+  :ensure t)
+
+(use-package intero
+  :ensure t
+  :hook (haskell-mode-hook . intero-mode))
+
+(use-package hindent
+  :ensure t
+  :hook (haskell-mode-hook . hindent-mode))
 ;; ************************************************** ;;
 ;; Built in emacs stuff
 ;; Remove toolbar
@@ -190,6 +220,8 @@
 (show-paren-mode 1)
 ;; Removes the start screen
 (setq inhibit-startup-screen t)
+;; Display the time on status bar
+(display-time-mode 1)
 
 (global-set-key (kbd "<backtab>") (lambda ()
 				    (interactive)
