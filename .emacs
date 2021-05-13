@@ -15,87 +15,58 @@
 
 (require 'use-package)
 
-(use-package moe-theme
+(use-package monokai-theme
   :ensure t
   :config
-  (load-theme 'moe-dark t))
-
-(use-package fill-column-indicator
-  :ensure t
-  :init
-  :config
-  (setq fci-rule-column 80)
-  (setq fci-rule-width 1)
-  (setq fci-rule-color "red")
-  :hook (c-mode . fci-mode))
+  (load-theme 'monokai t))
 
 (use-package flycheck
   :ensure t
-  :commands global-flycheck-mode
-  :init
-  (add-hook 'prog-mode-hook 'flycheck-mode)
-  :hook
-  (flycheck-mode . flycheck-list-errors)
-  :bind
-  ("C-." . flycheck-next-error)
-  ("C-:" . flycheck-previous-error)
+  :init (global-flycheck-mode)
   :config
   (add-to-list 'display-buffer-alist
-	       `(,(rx bos "*Flycheck errors*" eos)
+               `(,(rx bos "*Flycheck errors*" eos)
 		 (display-buffer-reuse-window
 		  display-buffer-in-side-window)
 		 (side            . bottom)
 		 (reusable-frames . visible)
-		 (window-height   . 0.20)))
-  (use-package flycheck-pos-tip
-    :ensure t
-    :config (flycheck-pos-tip-mode))
-  (use-package flycheck-color-mode-line
-    :ensure t
-    :hook (flycheck-mode . flycheck-color-mode-line-mode))
+		 (window-height   . 0.23)))
   )
 
-(use-package rtags
+(use-package lsp-mode
   :ensure t
-  )
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :hook
+  (rust-mode . lsp)
+  (lsp-mode . lsp-enable-which-key-integration)
+  (lsp-mode . flycheck-list-errors)
+  :commands lsp)
 
-(use-package company
-  :ensure t
-  :commands global-company-mode
-  :bind
-  (("C-RET" . company-manual-begin)
-   ("<C-return>" . company-manual-begin)
-   :map company-active-map
-   ("TAB" . nil)
-   ("<tab>" . nil))
-  :init (progn
-	  (global-company-mode))
-  :config (progn
-	    (setq company-tooltip-limit 20) ; bigger pop-up window
-	    (setq company-idle-delay .3)    ; decrease delay
-	    (setq company-echo-delay 0)     ; remove annoying blinking
-	    (setq company-begin-commands '(self-insert-command))
-	    )
-  (use-package company-c-headers
-    :ensure t
-    :config
-    (add-to-list 'company-backends 'company-c-headers))
-
-  (use-package company-irony
-    :ensure t
-    :config
-    (add-to-list 'company-backends 'company-irony))
-  )
-
-
-(use-package helm
+(use-package lsp-ui
   :ensure t
   :config
-  (helm-mode t)
-  (use-package helm-gtags
-    :ensure t
-    :hook (c-mode . helm-gtags-mode)
-    :bind ("<f6>" . helm-gtags-find-tag)))
+  (setq lsp-ui-doc-position 'at-point
+	lsp-ui-sideline-ignore-duplicate t)
+  :commands lsp-ui-mode)
+
+(use-package helm-lsp
+  :ensure t
+  :commands helm-lsp-workspace-symbol)
+
+(use-package lsp-treemacs
+  :ensure t
+  :config
+  (lsp-treemacs-sync-mode 1)
+  :commands lsp-treemacs-errors-list)
+
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode))
+
+(use-package company
+  :ensure t)
 
 (use-package powerline
   :ensure t
@@ -108,6 +79,9 @@
   :hook
   (prog-mode . highlight-indent-guides-mode))
 
+(use-package projectile
+  :ensure t)
+
 (use-package whitespace
   :init
   (global-whitespace-mode)
@@ -117,26 +91,6 @@
   :config
   (setq whitespace-line-column 80)
   (setq-default whitespace-style '(face trailing tab-mark)))
-
-(use-package google-this
-  :ensure t
-  :bind ("C-c g" . google-this)
-  :config (google-this-mode 1))
-
-(use-package ace-jump-mode
-  :ensure t
-  :bind
-  ("C-c SPC" . ace-jump-word-mode)
-  ("C-c C-g" . ace-jump-line-mode))
-
-(use-package org
-  :ensure t
-  :init
-  (setq org-agenda-files (list "~/org/OrgTutorial.org"))
-  :hook (org-mode . turn-on-flyspell)
-  :bind
-  ("\C-cl" . org-store-link)
-  ("\C-ca" . org-agenda))
 
 (use-package magit
   :ensure t
@@ -150,12 +104,6 @@
   :ensure t
   :bind ("<f8>" . mc/mark-next-like-this))
 
-(use-package groovy-mode
-  :ensure t)
-
-(use-package flymd
-  :ensure t)
-
 (use-package ivy
   :ensure t
   :init
@@ -168,42 +116,36 @@
   (setq ivy-ignore-buffers '("\\*"))
   )
 
-(use-package cmake-ide
-  :ensure t
-  :requires rtags
-  :config (cmake-ide-setup))
-
-(use-package xcscope
-  :ensure t
-  :init (cscope-setup))
-
 (use-package stickyfunc-enhance
   :ensure t
   :config
   (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
   )
 
-(use-package srefactor
-  :ensure t
-  :bind
-  ("M-RET" . srefactor-refactor-at-point)
-  )
-
 (use-package smooth-scrolling
   :ensure t
   :init (smooth-scrolling-mode 1))
 
-(use-package haskell-mode
-  :ensure t)
-
-(use-package intero
+;; Rust stuff
+(use-package rust-mode
   :ensure t
-  :hook (haskell-mode-hook . intero-mode))
-
-(use-package hindent
-  :ensure t
-  :hook (haskell-mode-hook . hindent-mode))
+  :hook
+  (rust-mode-hook . (lambda() (setq indent-tabs-mode nil)))
+  (rust-mode-hook . lsp-ui-flycheck-list)
+  :config (setq rust-format-on-save t)
+  (autoload 'rust-mode "rust-mode" nil t)
+  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+  :bind
+  ("C-c C-c" . rust-compile)
+  ("C-c C-r" . rust-run)
+  ("C-c C-t" . rust-test)
+  )
 ;; ************************************************** ;;
+(use-package python-mode
+  :ensure t
+  :hook (python-mode . lsp-deferred)
+  )
+
 ;; Built in emacs stuff
 ;; Remove toolbar
 (menu-bar-mode -1)
@@ -211,7 +153,7 @@
 ;; Remove the scroll bar
 (toggle-scroll-bar -1)
 ;; Highlights the current line
-(global-hl-line-mode 1)
+;;(global-hl-line-mode 1)
 ;; Pair () [] {} etc.
 (electric-pair-mode 1)
 ;; Shows the column number
@@ -239,11 +181,5 @@
   "Indent before saving."
   (indent-region (point-min) (point-max))nil)
 (add-hook 'before-save-hook 'indent-hook)
-
-(defun c-hook()
-  "Setup for C programming."
-  (c-set-style "linux")
-  (semantic-mode t))
-(add-hook 'c-mode-hook 'c-hook)
 
 ;;; .emacs ends here
